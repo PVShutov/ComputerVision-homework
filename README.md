@@ -1,6 +1,6 @@
 ## Computer Vision homework
 
-#### 1. Gaussian Bluring
+#### 1. Gaussian Blur
 
 ![Blur](/images/1.png?raw=true)
 
