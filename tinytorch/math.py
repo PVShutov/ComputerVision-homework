@@ -3,8 +3,8 @@ import numpy as np
 
 
 def softmax(input):
-	sum_e = np.sum(np.exp(input))
-	return np.exp(input) / sum_e
+	e = np.exp(input)
+	return e / e.sum()
 
 def relu(input):
-	return np.maximum(np.zeros_like(input), input)
+	return input * (input > 0) #np.maximum(input, 0)

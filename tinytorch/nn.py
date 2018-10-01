@@ -8,10 +8,9 @@ from tinytorch import math
 
 class ReLU(tinytorch.Function):
 	def forward(self, inputs):
-		return np.maximum(np.zeros_like(inputs.data), inputs.data)
+		return math.relu(inputs.data)
 	def backward(self, outputs):
-		return np.multiply(np.maximum(np.zeros_like(self.inputs.data), self.inputs.data), outputs)
-
+		return np.multiply(math.relu(self.inputs.data), outputs)
 
 
 class Softmax(tinytorch.Function):
@@ -32,7 +31,9 @@ class SoftmaxCrossEntropyWithLogits(tinytorch.Function):
 		return math.softmax(self.inputs.data) - labels.data
 
 
-class FC_layer(tinytorch.Function):
+
+
+class Linear(tinytorch.Function):
 	def __init__(self, input_size, output_size, initializer=None):
 		self.input_size = input_size
 		self.output_size = output_size
