@@ -14,7 +14,7 @@
 MLP architecture:
 1. Fully-connected layer [784✕800]
 2. ReLU activation
-3. Fully-connected layer [800✕20]
+3. Fully-connected layer [800✕10]
 4. Softmax 
 
 ![MLP](/images/2.png?raw=true)
