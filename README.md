@@ -1,10 +1,10 @@
-##Computer Vision homework
+## Computer Vision homework
 
-####1. Gaussian Bluring
+#### 1. Gaussian Bluring
 
 ![Blur](/images/1.png?raw=true)
 
-####2. Multilayer Perceptron
+#### 2. Multilayer Perceptron
 
 * iterations count = __60000__
 * batch size = __1__ 
