@@ -1,7 +1,7 @@
 #Partly taken from https://github.com/datapythonista/mnist
 
 
-import array, gzip, numpy, os, struct
+import array, gzip, numpy as np, os, struct
 
 datasets_url = 'http://yann.lecun.com/exdb/mnist/'
 
@@ -30,20 +30,14 @@ def parse_idx(fd):
 
 	data = array.array(data_type, fd.read())
 	data.byteswap()
-	return numpy.array(data).reshape(dimension_sizes)
+	return np.array(data).reshape(dimension_sizes)
 
 
-def train_images(target_dir):
-	return download_and_parse_mnist_file('train-images-idx3-ubyte.gz', target_dir)
+def train(target_dir):
+	return [download_and_parse_mnist_file('train-images-idx3-ubyte.gz', target_dir)/255.0, \
+	       download_and_parse_mnist_file('train-labels-idx1-ubyte.gz', target_dir)]
 
 
-def test_images(target_dir):
-	return download_and_parse_mnist_file('t10k-images-idx3-ubyte.gz', target_dir)
-
-
-def train_labels(target_dir):
-	return download_and_parse_mnist_file('train-labels-idx1-ubyte.gz', target_dir)
-
-
-def test_labels(target_dir):
-	return download_and_parse_mnist_file('t10k-labels-idx1-ubyte.gz', target_dir)
+def test(target_dir):
+	return [download_and_parse_mnist_file('t10k-images-idx3-ubyte.gz', target_dir)/255.0, \
+	       download_and_parse_mnist_file('t10k-labels-idx1-ubyte.gz', target_dir)]

@@ -7,28 +7,40 @@ from tinytorch import math
 
 
 class ReLU(tinytorch.Function):
-	def forward(self, inputs):
-		return math.relu(inputs.data)
-	def backward(self, outputs):
-		return np.multiply(math.relu(self.inputs.data), outputs)
+	def forward(self, input):
+		return math.relu(input.data)
+	def backward(self, grad, input):
+		return np.multiply(input.data > 0, grad)
 
 
 class Softmax(tinytorch.Function):
-	def forward(self, inputs):
-		return math.softmax(inputs.data)
-	def backward(self, outputs):
-		y = math.softmax(self.inputs.data)
+	def forward(self, input):
+		return math.softmax(input.data)
+	def backward(self, grad, input):
+		y = math.softmax(input.data)
 		mat = np.fill_diagonal(np.outer(-y, y), y - y*y).T
-		return np.matmul(mat, outputs)
+		return np.matmul(mat, grad)
+
+
+
+class L2Norm(tinytorch.Function):
+
+	def __call__(self, input):
+		return self.call_default(input)
+	def forward(self, input):
+		return np.sqrt(np.sum(np.square(input.data)))
+
+	def backward(self, grad, input):
+		return (input.data/(2.0*self.forward(input)))*grad
 
 
 class SoftmaxCrossEntropyWithLogits(tinytorch.Function):
-	def __call__(self, inputs, labels):
-		return self.call_default(inputs, labels)
-	def forward(self, inputs, labels):
-		return -np.dot(labels.data, np.log(math.softmax(inputs.data)))
-	def backward(self, outputs, labels):
-		return math.softmax(self.inputs.data) - labels.data
+	def __call__(self, input, label):
+		return self.call_default(input, label)
+	def forward(self, input, label):
+		return -np.dot(label.data, np.log(math.softmax(input.data)))
+	def backward(self, grad, input, label):
+		return math.softmax(input.data) - label.data
 
 
 
@@ -42,12 +54,12 @@ class Linear(tinytorch.Function):
 			initializer.init(self.weight)
 		self.bias = tinytorch.Tensor(output_size, trainable=True)
 		self.parameters = {'weight': self.weight, 'bias': self.bias}
-	def forward(self, inputs):
-		return np.dot(self.weight.data, inputs.data) + self.bias.data
-	def backward(self, outputs):
-		self.bias.grad = outputs
-		self.weight.grad = np.outer(outputs, self.inputs.data)
-		return np.dot(self.weight.data.transpose(), outputs)
+	def forward(self, input):
+		return np.dot(self.weight.data, input.data) + self.bias.data
+	def backward(self, grad, input):
+		self.bias.grad += grad
+		self.weight.grad += np.outer(grad, input.data)
+		return np.dot(self.weight.data.transpose(), grad)
 	def zero_grad(self):
 		self.weight.zero_grad()
 		self.bias.zero_grad()
@@ -61,19 +73,15 @@ class Sequential(tinytorch.Function):
 			if len(layer.parameters) > 0:
 				for key, value in layer.parameters.items():
 					self.parameters['{0}.{1}'.format(i, key)] = value
-
-	def forward(self, inputs):
-		output = inputs
+	def forward(self, input):
+		output = input
 		for layer in self.layer_list:
 			output = layer(output)
 		return output.data
-
-	def backward(self, outputs):
-		grad = outputs
+	def backward(self, grad, input):
 		for layer in reversed(self.layer_list):
-			grad = layer.backward(grad)
+			grad = layer.backward(grad, *layer.args)
 		return grad
-
 	def zero_grad(self):
 		for key, value in self.parameters.items():
 			value.zero_grad()
