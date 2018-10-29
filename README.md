@@ -18,3 +18,10 @@ MLP architecture:
 4. Softmax 
 
 ![MLP](/images/2.png?raw=true)
+
+
+#### 3. Conditional DC-GAN
+
+* dataset: __MNIST__
+
+![DCGAN](/images/3.png?raw=true)
