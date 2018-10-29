@@ -56,6 +56,8 @@ learning_rate = 0.01
 for iter, batch in enumerate(train):
 	seq.zero_grad()
 
+
+	out = 0
 	for i in range(BATCH_SIZE):
 		input.data = batch[0][i].reshape(784)
 		label.data.fill(0.0)
