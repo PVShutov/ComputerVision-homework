@@ -25,3 +25,10 @@ MLP architecture:
 * dataset: __MNIST__
 
 ![DCGAN](/images/3.png?raw=true)
+
+
+#### 4. MiniVGG
+
+* dataset: __CIFAR-10__
+
+![CIFAR-10](/images/4.png?raw=true)
