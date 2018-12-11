@@ -48,3 +48,8 @@ Best sample on test set (IoU = 0.98055):
 
 * Accuracy on test set = 0.9534
 * Only classification accuracy = 0.9862
+
+
+#### 6. MAP
+
+* MAP: 0.9653
