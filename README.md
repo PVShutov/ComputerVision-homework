@@ -53,3 +53,7 @@ Best sample on test set (IoU = 0.98055):
 #### 6. MAP
 
 * MAP: 0.9653
+
+#### 7. Line detection
+
+![Lines](/images/7.png?raw=true)
